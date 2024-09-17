@@ -56,6 +56,38 @@ test(`debe recibir la altura y el diametro para calcular el volumen de un tanque
 
 
 
+
+// 3 - FUNCION - DEVOLVER LOS LITROS DE AGUA DADO EL TIEMPO DE PEDALEO
+// 0.5 litros de agua por cada hora o 0.0083 litros por minuto
+
+function devolverLitrosDeAgua(horas) {
+    if (typeof horas === 'number' && !isNaN(horas)) {
+        return `${Math.round(horas * 0.5)} litros de agua en ${horas} horas`;
+    } else {
+        return "No es un numero";
+    }
+}
+
+test(`debera devolver 0.5 litros de agua por cada hora
+    que se introduzca en la funcion, redondeando el resultado`,
+    ()=>{
+        expect(devolverLitrosDeAgua(1.5)).toBe(`1 litros de agua en 1.5 horas`)
+        expect(devolverLitrosDeAgua(2)).toBe(`1 litros de agua en 2 horas`)
+        expect(devolverLitrosDeAgua("4.6")).toBe(`No es un numero`)
+        expect(devolverLitrosDeAgua("HOLA")).toBe("No es un numero")
+        expect(devolverLitrosDeAgua(undefined)).toBe("No es un numero")
+        expect(devolverLitrosDeAgua(NaN)).toBe("No es un numero")
+        expect(devolverLitrosDeAgua(null)).toBe("No es un numero")
+    })
+
+
+
+
+
+
+
+
+// 4 - FUNCION - DEVOLVER EL SIGLO CORRESPONDIENTE
 function devolverSiglo(año) {
     let siglo = 1;
 
@@ -74,6 +106,7 @@ function devolverSiglo(año) {
     }
 }
 
+// PRUEBA UNITARIA - FUNCION DEVOLVER EL SIGLO CORRESPONDIENTE
 test(`Debera recibir un año y devolver el siglo correspondiente`,
     ()=>{
         expect(devolverSiglo(0)).toBe("1DC");
@@ -82,5 +115,118 @@ test(`Debera recibir un año y devolver el siglo correspondiente`,
         expect(devolverSiglo(100)).toBe("2DC");
         expect(devolverSiglo(99)).toBe("1DC");
         expect(devolverSiglo(2024)).toBe("21DC");
+    }
+)
+
+
+
+
+
+
+
+
+// Crea una función que dada dos entradas devuelven quien gana, en caso de empate indica empate.
+// FUNCION - PIEDRA PAPEL O TIJERA
+function piedraPapelTijera(jugador1, jugador2){
+    if(jugador1!=='piedra' && jugador1!=='papel' && jugador1!=='tijera' || jugador2!=='piedra' && jugador2!=='papel' && jugador2!=='tijera'){
+        return "! Eso es trampa ¡"
+    }
+    if(jugador1===jugador2) return `¡EMPATE!`
+    if(jugador1==='papel' && jugador2==='tijera') return "jugador 2 vencedor"
+    if(jugador1==='papel' && jugador2==='piedra') return "jugador 1 vencedor"
+    if(jugador1==='tijera' && jugador2==='piedra') return "jugador 2 vencedor"
+    if(jugador1==='tijera' && jugador2==='papel') return "jugador 1 vencedor"
+    if(jugador1==='piedra' && jugador2==='papel') return "jugador 2 vencedor"
+    if(jugador1==='piedra' && jugador2==='tijera') return "jugador 1 vencedor"
+}
+
+// PRUEBA UNITARIA - FUNCION PIEDRA PAPEL O TIJERA
+test(`Debe aceptar 'piedra', 'papel' o 'tijera' para el jugador 1 y para el jugador 2
+    y la funcion devolvera quien es el ganador caso contrario se rechaza el procedimiento.
+    Si se ingresan iguales valores, la funcion devolvera empate`,
+    ()=>{
+        expect(piedraPapelTijera('papel', 'tijera')).toBe('jugador 2 vencedor')
+        expect(piedraPapelTijera('papel', 'piedra')).toBe('jugador 1 vencedor')
+        expect(piedraPapelTijera('piedra', 'tijera')).toBe('jugador 1 vencedor')
+        expect(piedraPapelTijera('piedra', 'papel')).toBe('jugador 2 vencedor')
+        expect(piedraPapelTijera('tijera', 'papel')).toBe('jugador 1 vencedor')
+        expect(piedraPapelTijera('tijera', 'piedra')).toBe('jugador 2 vencedor')
+        expect(piedraPapelTijera('tijera', 'tijera')).toBe('¡EMPATE!')
+        expect(piedraPapelTijera('piedra', 'piedra')).toBe('¡EMPATE!')
+        expect(piedraPapelTijera('papel', 'papel')).toBe('¡EMPATE!')
+        expect(piedraPapelTijera('tijera', 'cuchilla')).toBe('! Eso es trampa ¡')
+    }
+)
+
+
+
+
+
+
+
+
+// FUNCION - VALIDAR DIRECCION
+function validarDireccion(jsonDir){
+    const dirValidaJson = `{
+        "street":"Oliva",
+        "number":123,
+        "floor_apartment":"D1",
+        "zip_code":3477,
+        "town":"Plantaciones",
+        "city":"Botanica",
+        "province":"Verde"
+    }`
+
+    const dirValida = JSON.parse(dirValidaJson)
+    const dir = JSON.parse(jsonDir)
+    
+    for (let key in dir) {
+
+        if (dir.hasOwnProperty(key)) {
+
+            if(dir[key] === ""){
+                return `Uno de los campos esta incompleto`
+            }
+            if(dir[key] !== dirValida[key]){
+                return false
+            }
+        }
+    }
+    
+    return true
+}
+
+// PRUEBA UNITARIA - FUNCION VALIDAR DIRECCION
+test(`Debe recibir una direccion en formato json y convertirla a un objeto para recorrerlo y validar cada campo de la direccion.
+    La funcion devuleve TRUE cuando se consiguen validar todos los campos`,
+    () => {
+        const dir1 = `{"street":"Oliva",
+            "number":123,
+            "floor_apartment":"",
+            "zip_code":3477,
+            "town":"Plantaciones",
+            "city":"Botanica",
+            "province":"Verde"}`
+        
+        const dir2 = `{"street":"Oliva",
+            "number":123,
+            "floor_apartment":"D4",
+            "zip_code":3477,
+            "town":"Plantaciones",
+            "city":"Botanica",
+            "province":"Verde"}`
+
+        const dir3 = `{
+            "street":"Oliva",
+            "number":123,
+            "floor_apartment":"D1",
+            "zip_code":3477,
+            "town":"Plantaciones",
+            "city":"Botanica",
+            "province":"Verde"}`
+
+        expect(validarDireccion(dir1)).toBe('Uno de los campos esta incompleto')
+        expect(validarDireccion(dir2)).toBe(false)
+        expect(validarDireccion(dir3)).toBe(true)
     }
 )
